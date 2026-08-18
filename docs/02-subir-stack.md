@@ -1,24 +1,29 @@
-# 2. Subir a stack
+# 2. Subir a biblioteca
 
 ```bash
 make up
 make ps
 ```
 
-Interfaces locais:
+O comando sobe somente o Jellyfin, núcleo da biblioteca:
 
 | Serviço | Endereço |
 |---|---|
-| qBittorrent | `http://127.0.0.1:8080` |
-| Prowlarr | `http://127.0.0.1:9696` |
-| Sonarr | `http://127.0.0.1:8989` |
-| Radarr | `http://127.0.0.1:7878` |
+| Jellyfin | `http://127.0.0.1:8096` |
 
-O qBittorrent gera uma senha temporária do usuário `admin` no primeiro boot.
-Recupere-a com:
+No wizard inicial, crie um usuário administrador e adicione as bibliotecas:
+
+- filmes: `/data/movies`;
+- séries: `/data/tv`.
+
+O Jellyfin recebe `/data` como somente leitura. A gestão dos arquivos acontece
+no host, nunca pela interface do servidor de mídia.
+
+Para subir também a automação opcional das aulas posteriores:
 
 ```bash
-docker compose logs qbittorrent | grep -i password
+make up-automation
 ```
 
-Altere a senha logo no primeiro acesso.
+Consulte [Biblioteca Jellyfin](03-biblioteca-jellyfin.md) antes de avançar para
+a automação.
