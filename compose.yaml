@@ -12,7 +12,7 @@ services:
       - ./config/jellyfin:/config
       - ./media:/data:ro
     ports:
-      - 127.0.0.1:${JELLYFIN_PORT}:8096
+      - ${UI_BIND_ADDRESS}:${JELLYFIN_PORT}:8096
     restart: unless-stopped
 
   qbittorrent:
@@ -28,7 +28,7 @@ services:
       - ./config/qbittorrent:/config
       - ./media:/data
     ports:
-      - 127.0.0.1:${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
+      - ${UI_BIND_ADDRESS}:${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
     restart: unless-stopped
 
   prowlarr:
@@ -42,7 +42,7 @@ services:
     volumes:
       - ./config/prowlarr:/config
     ports:
-      - 127.0.0.1:${PROWLARR_PORT}:9696
+      - ${UI_BIND_ADDRESS}:${PROWLARR_PORT}:9696
     restart: unless-stopped
 
   sonarr:
@@ -57,7 +57,7 @@ services:
       - ./config/sonarr:/config
       - ./media:/data
     ports:
-      - 127.0.0.1:${SONARR_PORT}:8989
+      - ${UI_BIND_ADDRESS}:${SONARR_PORT}:8989
     restart: unless-stopped
 
   radarr:
@@ -72,5 +72,5 @@ services:
       - ./config/radarr:/config
       - ./media:/data
     ports:
-      - 127.0.0.1:${RADARR_PORT}:7878
+      - ${UI_BIND_ADDRESS}:${RADARR_PORT}:7878
     restart: unless-stopped

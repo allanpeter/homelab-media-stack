@@ -79,6 +79,9 @@ pastas vivem no mesmo filesystem.
 ## Segurança e escopo
 
 - As UIs escutam apenas em `127.0.0.1` por padrão.
+- Para um laboratório em rede, sobrescreva `UI_BIND_ADDRESS` somente com o IP
+  privado do host e restrinja as portas no firewall; nunca use isso para expor
+  as UIs publicamente.
 - Não publique qBittorrent, Jellyfin ou as APIs Arr diretamente na internet.
 - Não versione tokens, credenciais, cookies nem o conteúdo de `config/`.
 - Use somente mídia e fontes que você possui ou tem autorização para acessar.
