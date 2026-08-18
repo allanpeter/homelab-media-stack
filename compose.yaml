@@ -1,9 +1,24 @@
-name: arr-suite-demo
+name: homelab-media-stack
 
 services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: homelab-media-jellyfin
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - ./config/jellyfin:/config
+      - ./media:/data:ro
+    ports:
+      - 127.0.0.1:${JELLYFIN_PORT}:8096
+    restart: unless-stopped
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: arr-demo-qbittorrent
+    container_name: homelab-media-qbittorrent
+    profiles: ["automation"]
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -18,7 +33,8 @@ services:
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
-    container_name: arr-demo-prowlarr
+    container_name: homelab-media-prowlarr
+    profiles: ["automation"]
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -31,7 +47,8 @@ services:
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
-    container_name: arr-demo-sonarr
+    container_name: homelab-media-sonarr
+    profiles: ["automation"]
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -45,7 +62,8 @@ services:
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
-    container_name: arr-demo-radarr
+    container_name: homelab-media-radarr
+    profiles: ["automation"]
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
