@@ -1,0 +1,9 @@
+# Runtime state. Nunca versionar configurações geradas, mídia ou segredos locais.
+.env
+config/
+media/
+
+# Sistema/editor
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,58 @@
+name: arr-suite-demo
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: arr-demo-qbittorrent
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      WEBUI_PORT: ${QBITTORRENT_PORT}
+    volumes:
+      - ./config/qbittorrent:/config
+      - ./media:/data
+    ports:
+      - 127.0.0.1:${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: arr-demo-prowlarr
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - ./config/prowlarr:/config
+    ports:
+      - 127.0.0.1:${PROWLARR_PORT}:9696
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: arr-demo-sonarr
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - ./config/sonarr:/config
+      - ./media:/data
+    ports:
+      - 127.0.0.1:${SONARR_PORT}:8989
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: arr-demo-radarr
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - ./config/radarr:/config
+      - ./media:/data
+    ports:
+      - 127.0.0.1:${RADARR_PORT}:7878
+    restart: unless-stopped
