@@ -16,10 +16,18 @@ services:
   dashboard:
     image: nginx:1.27-alpine
     container_name: homelab-media-dashboard
+    environment:
+      NGINX_ENVSUBST_OUTPUT_DIR: /usr/share/nginx/html
+      NGINX_ENVSUBST_FILTER: "_PORT$$"
+      JELLYFIN_PORT: ${JELLYFIN_PORT:-8096}
+      QBITTORRENT_PORT: ${QBITTORRENT_PORT:-8080}
+      PROWLARR_PORT: ${PROWLARR_PORT:-9696}
+      SONARR_PORT: ${SONARR_PORT:-8989}
+      RADARR_PORT: ${RADARR_PORT:-7878}
     volumes:
-      - ./dashboard:/usr/share/nginx/html:ro
+      - ./dashboard/index.html:/etc/nginx/templates/index.html.template:ro
     ports:
-      - "8000:80"
+      - "${UI_BIND_ADDRESS:-0.0.0.0}:8000:80"
     depends_on:
       init:
         condition: service_completed_successfully
@@ -36,7 +44,7 @@ services:
       - ./config/jellyfin:/config
       - ./media:/data:ro
     ports:
-      - "8096:8096"
+      - "${UI_BIND_ADDRESS:-0.0.0.0}:${JELLYFIN_PORT:-8096}:8096"
     depends_on:
       init:
         condition: service_completed_successfully
@@ -54,7 +62,7 @@ services:
       - ./config/qbittorrent:/config
       - ./media:/data
     ports:
-      - "8080:8080"
+      - "${UI_BIND_ADDRESS:-0.0.0.0}:${QBITTORRENT_PORT:-8080}:8080"
     depends_on:
       init:
         condition: service_completed_successfully
@@ -70,7 +78,7 @@ services:
     volumes:
       - ./config/prowlarr:/config
     ports:
-      - "9696:9696"
+      - "${UI_BIND_ADDRESS:-0.0.0.0}:${PROWLARR_PORT:-9696}:9696"
     depends_on:
       init:
         condition: service_completed_successfully
@@ -87,7 +95,7 @@ services:
       - ./config/sonarr:/config
       - ./media:/data
     ports:
-      - "8989:8989"
+      - "${UI_BIND_ADDRESS:-0.0.0.0}:${SONARR_PORT:-8989}:8989"
     depends_on:
       init:
         condition: service_completed_successfully
@@ -104,7 +112,7 @@ services:
       - ./config/radarr:/config
       - ./media:/data
     ports:
-      - "7878:7878"
+      - "${UI_BIND_ADDRESS:-0.0.0.0}:${RADARR_PORT:-7878}:7878"
     depends_on:
       init:
         condition: service_completed_successfully

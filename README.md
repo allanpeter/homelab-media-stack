@@ -18,6 +18,7 @@ docker compose up -d
 ```
 
 Abra `http://localhost:8000`. O painel mostra os links para todos os serviços.
+O acesso pelo localhost e pela rede local já vem habilitado, sem criar `.env`.
 Se abrir o painel por um IP da rede, como `http://192.168.1.50:8000`, os links
 usarão automaticamente esse mesmo IP. Consulte [Pré-requisitos](docs/01-pre-requisitos.md)
 e [Subir a stack](docs/02-subir-stack.md).
@@ -73,9 +74,9 @@ pastas vivem no mesmo filesystem.
 
 `config/`, `media/` e `.env` são locais e ignorados pelo Git. O `.env` é
 opcional: o Compose possui valores padrão e inicia sem configuração manual.
-As portas do laboratório são fixas para que o dashboard possa mostrar os links
-corretos; se alguma já estiver ocupada, pare o serviço que a usa ou altere o
-`compose.yaml` e o respectivo link em `dashboard/index.html`.
+As portas dos aplicativos podem ser alteradas pelas variáveis `*_PORT` do
+`.env.example`. O dashboard usa essas mesmas variáveis para gerar os links.
+Sem `.env`, os fallbacks do Compose usam os valores documentados no exemplo.
 
 ## Comandos
 
@@ -94,8 +95,9 @@ integrações automaticamente.
 
 ## Segurança e escopo
 
-- As UIs escutam nas interfaces do host para que funcionem em `localhost` e pelo
-  IP recebido via DHCP. Restrinja essas portas no firewall da sua rede.
+- As UIs escutam em `0.0.0.0` por padrão, permitindo acesso pela rede local.
+  Restrinja essas portas no firewall. Para limitar ao host, defina
+  `UI_BIND_ADDRESS=127.0.0.1` no `.env`.
 - Não publique qBittorrent, Jellyfin ou as APIs Arr diretamente na internet.
 - Não versione tokens, credenciais, cookies nem o conteúdo de `config/`.
 - Use somente mídia e fontes que você possui ou tem autorização para acessar.

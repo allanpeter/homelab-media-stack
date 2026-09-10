@@ -10,7 +10,7 @@ Abra o painel:
 
 `http://localhost:8000`
 
-Se o host recebeu o IP `192.168.1.50`, também é possível abrir
+O acesso pela rede local já está habilitado por padrão. Se o host recebeu o IP `192.168.1.50`, também é possível abrir
 `http://192.168.1.50:8000`. O painel monta os links usando o mesmo host pelo
 qual foi acessado, sem editar IP em arquivo algum.
 

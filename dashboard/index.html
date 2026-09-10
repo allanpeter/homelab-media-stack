@@ -28,11 +28,11 @@
       const host = window.location.hostname;
       document.querySelector('#host').textContent = host;
       const services = [
-        ['Jellyfin', 8096, 'Biblioteca e reprodução de mídia'],
-        ['qBittorrent', 8080, 'Cliente de downloads'],
-        ['Prowlarr', 9696, 'Gerenciador de indexadores'],
-        ['Sonarr', 8989, 'Gerenciador de séries'],
-        ['Radarr', 7878, 'Gerenciador de filmes'],
+        ['Jellyfin', ${JELLYFIN_PORT}, 'Biblioteca e reprodução de mídia'],
+        ['qBittorrent', ${QBITTORRENT_PORT}, 'Cliente de downloads'],
+        ['Prowlarr', ${PROWLARR_PORT}, 'Gerenciador de indexadores'],
+        ['Sonarr', ${SONARR_PORT}, 'Gerenciador de séries'],
+        ['Radarr', ${RADARR_PORT}, 'Gerenciador de filmes'],
       ];
       document.querySelector('#services').innerHTML = services.map(([name, port, description]) => `
         <a href="http://${host}:${port}" target="_blank" rel="noopener">
