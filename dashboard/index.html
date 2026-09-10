@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Homelab Media Stack</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #10151c; color: #edf2f7; }
+      body { max-width: 960px; margin: 0 auto; padding: 48px 24px; }
+      h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.25rem); }
+      .intro { color: #aebdcb; font-size: 1.1rem; line-height: 1.6; }
+      #host { color: #8ce3b5; font-weight: 700; }
+      main { display: grid; grid-template-columns: repeat(auto-fit, minmax(225px, 1fr)); gap: 16px; margin-top: 32px; }
+      a { display: block; min-height: 110px; padding: 24px; border: 1px solid #2d3c4c; border-radius: 14px; background: #18222d; color: inherit; text-decoration: none; }
+      a:hover, a:focus { border-color: #65c5f5; background: #1c2a37; outline: none; }
+      strong { display: block; font-size: 1.25rem; margin-bottom: 8px; }
+      small { color: #aebdcb; }
+      footer { margin-top: 32px; color: #aebdcb; font-size: .9rem; }
+      code { color: #8ce3b5; }
+    </style>
+  </head>
+  <body>
+    <h1>Homelab Media Stack</h1>
+    <p class="intro">Serviços disponíveis em <span id="host"></span>. Os links usam o mesmo endereço pelo qual este painel foi aberto.</p>
+    <main id="services"></main>
+    <footer>Primeiro acesso: conclua o assistente do Jellyfin. A senha temporária do qBittorrent aparece em <code>docker compose logs qbittorrent</code>.</footer>
+    <script>
+      const host = window.location.hostname;
+      document.querySelector('#host').textContent = host;
+      const services = [
+        ['Jellyfin', ${JELLYFIN_PORT}, 'Biblioteca e reprodução de mídia'],
+        ['qBittorrent', ${QBITTORRENT_PORT}, 'Cliente de downloads'],
+        ['Prowlarr', ${PROWLARR_PORT}, 'Gerenciador de indexadores'],
+        ['Sonarr', ${SONARR_PORT}, 'Gerenciador de séries'],
+        ['Radarr', ${RADARR_PORT}, 'Gerenciador de filmes'],
+      ];
+      document.querySelector('#services').innerHTML = services.map(([name, port, description]) => `
+        <a href="http://${host}:${port}" target="_blank" rel="noopener">
+          <strong>${name}</strong><small>${description}<br>http://${host}:${port}</small>
+        </a>`).join('');
+    </script>
+  </body>
+</html>
