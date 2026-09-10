@@ -82,9 +82,15 @@ corretos; se alguma já estiver ocupada, pare o serviço que a usa ou altere o
 | Comando | Serviços |
 |---|---|
 | `docker compose up -d` | Todos os serviços e o dashboard |
-| `make up` | Todos os serviços e mostra o endereço do dashboard |
-| `make down` | Para a stack e preserva o estado |
-| `make reset` | Para a stack e apaga `config/` e `media/` |
+| `docker compose down` | Para a stack e preserva o estado |
+| `docker compose ps` | Mostra o estado dos serviços |
+| `docker compose logs -f --tail=100` | Acompanha os logs |
+
+Não é necessário Makefile nem executar uma inicialização separada. O serviço
+`init` do Compose prepara as pastas e permissões automaticamente antes dos demais
+serviços. No primeiro acesso, configure os usuários, bibliotecas e integrações
+entre os aplicativos conforme os guias; subir os containers não configura essas
+integrações automaticamente.
 
 ## Segurança e escopo
 
@@ -93,5 +99,6 @@ corretos; se alguma já estiver ocupada, pare o serviço que a usa ou altere o
 - Não publique qBittorrent, Jellyfin ou as APIs Arr diretamente na internet.
 - Não versione tokens, credenciais, cookies nem o conteúdo de `config/`.
 - Use somente mídia e fontes que você possui ou tem autorização para acessar.
-- Antes de uma aula, use `make reset` somente se aceitar apagar todo o estado
-  local do laboratório.
+- Para apagar todo o estado local do laboratório, existe o script opcional
+  `./scripts/reset-lab.sh --confirm`. Ele remove `config/` e `media/`, incluindo
+  os arquivos de mídia.
