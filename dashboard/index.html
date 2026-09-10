@@ -23,7 +23,7 @@
     <h1>Homelab Media Stack</h1>
     <p class="intro">Serviços disponíveis em <span id="host"></span>. Os links usam o mesmo endereço pelo qual este painel foi aberto.</p>
     <main id="services"></main>
-    <footer>Primeiro acesso: conclua o assistente do Jellyfin. A senha temporária do qBittorrent aparece em <code>docker compose logs qbittorrent</code>.</footer>
+    <footer>Login do laboratório: <code>admin</code> / <code>1234</code> no qBittorrent, Sonarr e Radarr. O Prowlarr abre sem login; no Jellyfin você define a conta no assistente inicial.</footer>
     <script>
       const host = window.location.hostname;
       document.querySelector('#host').textContent = host;

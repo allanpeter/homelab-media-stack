@@ -1,0 +1,21 @@
+<Config>
+  <!--
+    Semente de primeiro boot para Sonarr e Radarr.
+
+    No primeiro start, quando ainda não existe nenhum usuário no banco, o
+    UserService destes apps lê <Username> e <Password> deste arquivo e grava o
+    usuário já com hash (PBKDF2-HMAC-SHA512). Depois disso este arquivo é
+    reescrito pelo próprio app, que também preenche Port, ApiKey e o restante
+    dos defaults — por isso não declaramos essas chaves aqui.
+
+    Prowlarr NÃO tem esse seeding: o UserService dele não escuta o evento de
+    start, então lá as credenciais são definidas na tela de primeiro acesso.
+
+    A senha fica em texto puro neste arquivo (e no config.xml gerado). Vale só
+    para laboratório com a UI restrita a localhost/LAN de confiança.
+  -->
+  <AuthenticationMethod>Forms</AuthenticationMethod>
+  <AuthenticationRequired>Enabled</AuthenticationRequired>
+  <Username>admin</Username>
+  <Password>1234</Password>
+</Config>
