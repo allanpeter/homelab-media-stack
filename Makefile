@@ -2,26 +2,20 @@ SHELL := /bin/sh
 
 .DEFAULT_GOAL := help
 
-.PHONY: help init doctor up up-library up-automation down logs ps config reset
+.PHONY: help init doctor up down logs ps config reset
 
 help:
-	@printf '%s\n' 'Targets: init doctor up up-library up-automation down logs ps config reset'
+	@printf '%s\n' 'Targets: init doctor up down logs ps config reset'
 
 init:
-	@test -f .env || cp .env.example .env
-	@mkdir -p config/qbittorrent config/prowlarr config/sonarr config/radarr \
-		media/downloads media/movies media/tv
+	docker compose run --rm init
 
 doctor:
 	@./scripts/doctor.sh
 
-up: up-library
-
-up-library: init
+up:
 	docker compose up -d
-
-up-automation: init
-	docker compose --profile automation up -d
+	@printf '%s\n' 'Painel: http://localhost:8000'
 
 down:
 	docker compose down

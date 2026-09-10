@@ -1,10 +1,7 @@
-# 4. Automação opcional
+# 4. Automação
 
-Depois de validar a biblioteca, suba os serviços de automação:
-
-```bash
-make up-automation
-```
+Os serviços de automação já iniciam com `docker compose up -d`. Acesse-os pelo
+dashboard em `http://localhost:8000` ou pelos endereços abaixo.
 
 | Serviço | Endereço local |
 |---|---|

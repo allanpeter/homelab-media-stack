@@ -1,76 +1,111 @@
 name: homelab-media-stack
 
 services:
+  init:
+    image: alpine:3.21
+    container_name: homelab-media-init
+    command: >-
+      /bin/sh -ec 'mkdir -p /config/jellyfin /config/qbittorrent /config/prowlarr
+      /config/sonarr /config/radarr /media/downloads /media/movies /media/tv &&
+      chown -R ${PUID:-1000}:${PGID:-1000} /config /media'
+    volumes:
+      - ./config:/config
+      - ./media:/media
+    restart: "no"
+
+  dashboard:
+    image: nginx:1.27-alpine
+    container_name: homelab-media-dashboard
+    volumes:
+      - ./dashboard:/usr/share/nginx/html:ro
+    ports:
+      - "8000:80"
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: homelab-media-jellyfin
     environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TZ}
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
     volumes:
       - ./config/jellyfin:/config
       - ./media:/data:ro
     ports:
-      - ${UI_BIND_ADDRESS}:${JELLYFIN_PORT}:8096
+      - "8096:8096"
+    depends_on:
+      init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: homelab-media-qbittorrent
-    profiles: ["automation"]
     environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TZ}
-      WEBUI_PORT: ${QBITTORRENT_PORT}
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      WEBUI_PORT: 8080
     volumes:
       - ./config/qbittorrent:/config
       - ./media:/data
     ports:
-      - ${UI_BIND_ADDRESS}:${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
+      - "8080:8080"
+    depends_on:
+      init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: homelab-media-prowlarr
-    profiles: ["automation"]
     environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TZ}
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
     volumes:
       - ./config/prowlarr:/config
     ports:
-      - ${UI_BIND_ADDRESS}:${PROWLARR_PORT}:9696
+      - "9696:9696"
+    depends_on:
+      init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: homelab-media-sonarr
-    profiles: ["automation"]
     environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TZ}
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
     volumes:
       - ./config/sonarr:/config
       - ./media:/data
     ports:
-      - ${UI_BIND_ADDRESS}:${SONARR_PORT}:8989
+      - "8989:8989"
+    depends_on:
+      init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: homelab-media-radarr
-    profiles: ["automation"]
     environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TZ}
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
     volumes:
       - ./config/radarr:/config
       - ./media:/data
     ports:
-      - ${UI_BIND_ADDRESS}:${RADARR_PORT}:7878
+      - "7878:7878"
+    depends_on:
+      init:
+        condition: service_completed_successfully
     restart: unless-stopped

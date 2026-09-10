@@ -1,27 +1,26 @@
 # Homelab Media Stack
 
-Biblioteca de mídia pessoal com Jellyfin e automação opcional em Docker Compose.
-Funciona em qualquer host Docker; não depende de Proxmox, NAS ou da infraestrutura
-usada para gravar a série.
+Biblioteca de mídia pessoal com Jellyfin, qBittorrent, Prowlarr, Sonarr e Radarr
+em Docker Compose. Funciona em qualquer host Docker; não depende de Proxmox, NAS
+ou da infraestrutura usada para gravar a série.
 
 > Série no YouTube: **link será adicionado antes da publicação**.
 
-Comece pelo Jellyfin: em poucos minutos você terá uma biblioteca local com mídia
-própria ou autorizada pronta para reproduzir. A automação vem depois, como um
-módulo separado.
+Em poucos minutos você terá uma biblioteca local com mídia própria ou autorizada
+pronta para reproduzir e os serviços de organização disponíveis no mesmo painel.
 
 ## Comece aqui
 
 ```bash
-cp .env.example .env
-make doctor
-make up
-make ps
+git clone <URL_DO_REPOSITORIO>
+cd homelab-media-stack
+docker compose up -d
 ```
 
-Abra `http://127.0.0.1:8096` e conclua o wizard do Jellyfin. Consulte
-[Pré-requisitos](docs/01-pre-requisitos.md) e [Subir a
-biblioteca](docs/02-subir-stack.md).
+Abra `http://localhost:8000`. O painel mostra os links para todos os serviços.
+Se abrir o painel por um IP da rede, como `http://192.168.1.50:8000`, os links
+usarão automaticamente esse mesmo IP. Consulte [Pré-requisitos](docs/01-pre-requisitos.md)
+e [Subir a stack](docs/02-subir-stack.md).
 
 ## Série por episódio
 
@@ -29,7 +28,7 @@ biblioteca](docs/02-subir-stack.md).
 |---|---|---|
 | 0 — Biblioteca pessoal | Jellyfin reproduzindo uma biblioteca local | [Guia](docs/03-biblioteca-jellyfin.md) · vídeo em breve |
 | 1 — Arquivos e permissões | Layout `/data` consistente e persistente | guia em breve |
-| 2 — Automação opcional | qBittorrent, Prowlarr, Sonarr e Radarr | [Guia](docs/04-automacao-opcional.md) · vídeo em breve |
+| 2 — Automação | qBittorrent, Prowlarr, Sonarr e Radarr | [Guia](docs/04-automacao-opcional.md) · vídeo em breve |
 | 3 — Operação e limpeza | Diagnóstico, atualização e remoção segura | guia em breve |
 
 ## Hardware e infraestrutura
@@ -41,12 +40,19 @@ há recomendação comercial oculta neste repositório.
 ## Arquitetura
 
 ```text
-Jellyfin (padrão)
+Dashboard :8000
+├── Jellyfin :8096
+├── qBittorrent :8080
+├── Prowlarr :9696
+├── Sonarr :8989
+└── Radarr :7878
+
+Jellyfin
 └── /data:ro
     ├── movies/
     └── tv/
 
-Automação opcional (profile: automation)
+Automação
 ├── qBittorrent ── /data/downloads
 ├── Sonarr      ── /data/tv
 ├── Radarr      ── /data/movies
@@ -65,23 +71,25 @@ Os serviços que manipulam arquivos usam o mesmo caminho interno, `/data`. Isso
 evita mapeamentos inconsistentes e permite operações atômicas quando todas as
 pastas vivem no mesmo filesystem.
 
-`config/`, `media/` e `.env` são locais e ignorados pelo Git.
+`config/`, `media/` e `.env` são locais e ignorados pelo Git. O `.env` é
+opcional: o Compose possui valores padrão e inicia sem configuração manual.
+As portas do laboratório são fixas para que o dashboard possa mostrar os links
+corretos; se alguma já estiver ocupada, pare o serviço que a usa ou altere o
+`compose.yaml` e o respectivo link em `dashboard/index.html`.
 
-## Perfis Docker Compose
+## Comandos
 
 | Comando | Serviços |
 |---|---|
-| `make up` | Jellyfin |
-| `make up-automation` | Jellyfin + qBittorrent + Prowlarr + Sonarr + Radarr |
+| `docker compose up -d` | Todos os serviços e o dashboard |
+| `make up` | Todos os serviços e mostra o endereço do dashboard |
 | `make down` | Para a stack e preserva o estado |
 | `make reset` | Para a stack e apaga `config/` e `media/` |
 
 ## Segurança e escopo
 
-- As UIs escutam apenas em `127.0.0.1` por padrão.
-- Para um laboratório em rede, sobrescreva `UI_BIND_ADDRESS` somente com o IP
-  privado do host e restrinja as portas no firewall; nunca use isso para expor
-  as UIs publicamente.
+- As UIs escutam nas interfaces do host para que funcionem em `localhost` e pelo
+  IP recebido via DHCP. Restrinja essas portas no firewall da sua rede.
 - Não publique qBittorrent, Jellyfin ou as APIs Arr diretamente na internet.
 - Não versione tokens, credenciais, cookies nem o conteúdo de `config/`.
 - Use somente mídia e fontes que você possui ou tem autorização para acessar.
