@@ -1,0 +1,20 @@
+<Config>
+  <!--
+    Semente de primeiro boot do Prowlarr.
+
+    Diferente de Sonarr e Radarr, o UserService do Prowlarr não escuta o evento
+    de start que semeia usuário a partir do config.xml — não existe arquivo que
+    defina admin/1234 aqui. As opções eram: cair na tela de primeiro acesso, ou
+    dispensar o login.
+
+    AuthenticationMethod=External registra o NoAuthenticationHandler, o mesmo
+    handler usado por None: nenhuma autenticação. O Prowlarr abre direto, sem
+    tela de login e sem cadastro.
+
+    Isso pressupõe que a UI está restrita a localhost/LAN de confiança via
+    UI_BIND_ADDRESS. Com 0.0.0.0 numa rede compartilhada, qualquer máquina abre
+    o Prowlarr sem credencial alguma. Para exigir login, troque por Forms e
+    defina usuário e senha na tela que ele apresentar.
+  -->
+  <AuthenticationMethod>External</AuthenticationMethod>
+</Config>

@@ -5,12 +5,28 @@ services:
     image: alpine:3.21
     container_name: homelab-media-init
     command: >-
-      /bin/sh -ec 'mkdir -p /config/jellyfin /config/qbittorrent /config/prowlarr
-      /config/sonarr /config/radarr /media/downloads /media/movies /media/tv &&
+      /bin/sh -ec 'mkdir -p /config/jellyfin /config/qbittorrent/qBittorrent
+      /config/prowlarr /config/sonarr /config/radarr /media/downloads/incomplete
+      /media/movies /media/tv;
+      if [ ! -f /config/qbittorrent/qBittorrent/qBittorrent.conf ]; then
+      cp /defaults/qbittorrent.conf /config/qbittorrent/qBittorrent/qBittorrent.conf;
+      fi;
+      if [ ! -f /config/sonarr/config.xml ]; then
+      cp /defaults/arr-config.xml /config/sonarr/config.xml;
+      fi;
+      if [ ! -f /config/radarr/config.xml ]; then
+      cp /defaults/arr-config.xml /config/radarr/config.xml;
+      fi;
+      if [ ! -f /config/prowlarr/config.xml ]; then
+      cp /defaults/prowlarr-config.xml /config/prowlarr/config.xml;
+      fi;
       chown -R ${PUID:-1000}:${PGID:-1000} /config /media'
     volumes:
       - ./config:/config
       - ./media:/media
+      - ./defaults/qbittorrent.conf:/defaults/qbittorrent.conf:ro
+      - ./defaults/arr-config.xml:/defaults/arr-config.xml:ro
+      - ./defaults/prowlarr-config.xml:/defaults/prowlarr-config.xml:ro
     restart: "no"
 
   dashboard:
